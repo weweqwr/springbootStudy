@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fontgoaway.mapper.RotationMapper">
+    <resultMap id="BaseResultMap" type="com.fontgoaway.entity.Gw_rotation">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="imageUrl" jdbcType="VARCHAR" property="imageUrl"/>
+        <result column="createTime" jdbcType="VARCHAR" property="createTime"/>
+        <result column="orderId" jdbcType="INTEGER" property="orderId"/>
+        <result column="originator" jdbcType="VARCHAR" property="originator"/>
+        <result column="state" jdbcType="INTEGER" property="state"/>
+        <result column="flag" jdbcType="INTEGER" property="flag"/>
+        <result column="count" jdbcType="INTEGER" property="count"/>
+        <result column="page" jdbcType="INTEGER" property="page"/>
+        <result column="curPage" jdbcType="INTEGER" property="curPage"/>
+
+    </resultMap>
+    <!--上传照片-->
+    <insert id="uploadRotation" parameterType="com.fontgoaway.entity.Gw_rotation">
+    INSERT INTO gw_rotation(imageUrL,createTime,originator,orderId) VALUES(#{imageUrl},#{createTime}
+    ,#{originator},0)
+    </insert>
+    <!--查询轮播-->
+    <select id="queryRotation" resultMap="BaseResultMap">
+        SELECT * from gw_rotation
+        <!--通过id查询-->
+        <if test="id!=0">
+            WHERE id LIKE CONCAT('%',#{id},'%')
+            OR originator LIKE CONCAT('%',#{id},'%')
+        </if>
+        <if test="flag==1">
+            ORDER BY createTime DESC
+        </if>
+        LIMIT #{page},15
+    </select>
+
+    <update id="sheildRotation" parameterType="com.fontgoaway.entity.Gw_rotation">
+        <if test="state==1">
+          UPDATE gw_rotation  SET state=1 WHERE id=#{id}
+        </if>
+        <if test="state==0">
+           UPDATE gw_rotation  SET state=0 WHERE id=#{id}
+        </if>
+    </update>
+    <!--查询一共有几条数据-->
+    <select id="queryRotationCount" resultMap="BaseResultMap">
+        SELECT COUNT(*) count FROM gw_rotation
+        <if test="id!=0">
+            WHERE id LIKE CONCAT('%',#{id},'%')
+            OR originator LIKE CONCAT('%',#{id},'%')
+        </if>
+    </select>
+    <!--查询一共微信小程序展示有几条数据-->
+    <select id="queryRotationCountMini" resultMap="BaseResultMap">
+        SELECT COUNT(*) count FROM gw_rotation
+        WHERE state=1
+        ORDER BY orderId
+    </select>
+    <select id="queryRotationMini" resultMap="BaseResultMap">
+        SELECT * FROM gw_rotation
+        WHERE state=1
+        ORDER BY orderId
+        LIMIT #{page},15
+    </select>
+    <!--轮播排序-->
+    <update id="orderRotationById" parameterType="java.util.Map">
+        UPDATE gw_rotation SET  orderId=0;
+        <foreach collection="maps" item="item" index="key">
+            UPDATE gw_rotation
+            SET  orderId=#{item}
+            WHERE id=#{key};
+        </foreach>
+    </update>
+</mapper>

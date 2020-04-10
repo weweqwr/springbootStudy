@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里填写对应的Dao文件所在的路径-->
+<mapper namespace="com.fontgoaway.mapper.NoticeCommentMapper">
+    <!--    填写数据库里实例Gw_notice对应的表的表名-->
+    <!--    这里是作为一个变量使用-->
+    <sql id="table">gw_notice_comment</sql>
+    <!--    id属性填写Dao（Mapper）文件里的函数名称-->
+    <!--    查询所有-->
+    <select id="findAllComment" resultType="com.fontgoaway.entity.Gw_notice_comment">
+        select * from
+        <include refid="table"></include>
+    </select>
+<!--   根据 noticeId和userId -->
+    <select id="findByNoticeIdUserId" resultType="com.fontgoaway.entity.Gw_notice_comment" parameterType="int">
+        select * from
+        <include refid="table"></include>
+        where noticeId = #{noticeId}
+        and userId = #{userId}
+    </select>
+<!--   根据 noticeId和userId、commentType -->
+    <select id="findByNoticeIdUserIdCommentType" resultType="com.fontgoaway.entity.Gw_notice_comment" parameterType="int">
+        select * from
+        <include refid="table"></include>
+        where noticeId = #{noticeId}
+        and userId = #{userId}
+        and commentType =#{commentType}
+    </select>
+<!--   content -->
+    <select id="findByContent" resultType="com.fontgoaway.entity.Gw_notice_comment" parameterType="String">
+        select * from
+        <include refid="table"></include>
+        where content like #{content}
+    </select>
+<!--    state-->
+    <select id="findByState" resultType="com.fontgoaway.entity.Gw_notice_comment" parameterType="int">
+        select * from
+        <include refid="table"></include>
+        where state=#{state}
+    </select>
+<!--    屏蔽-->
+    <update id="modifyState" parameterType="int">
+        update <include refid="table"></include>
+        set state = #{state}
+        where id = #{id}
+    </update>
+</mapper>

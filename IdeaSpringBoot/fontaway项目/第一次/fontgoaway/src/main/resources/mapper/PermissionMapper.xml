@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fontgoaway.mapper.PermissionMapper">
+    <resultMap id="BaseResultMap" type="com.fontgoaway.entity.Gw_permission">
+        <result column="pername" jdbcType="VARCHAR" property="pername"/>
+        <result column="percode" jdbcType="VARCHAR" property="percode"/>
+        <result column="account" jdbcType="VARCHAR" property="account"/>
+        <result column="perId" jdbcType="INTEGER" property="perId"/>
+        <result column="roleId" jdbcType="INTEGER" property="roleId"/>
+    </resultMap>
+    <!-- 根据用户账号查询用户拥有的权限 -->
+    <select id="queryPermissionByAccount" resultMap="BaseResultMap">
+         SELECT p.perId,p.pername,p.percode
+        FROM gw_permission p
+        INNER JOIN gw_role_permission rp
+        on p.perId=rp.perId
+        INNER JOIN gw_admin_role ar
+        on ar.roleId=rp.roleId
+        where ar.account=#{account}
+    </select>
+<!--    //删除角色的权限-->
+    <delete id="deleteRolePermissionByRoleId" parameterType="com.fontgoaway.entity.Gw_permission">
+        DELETE FROM gw_role_permission
+        WHERE perId=#{perId}
+        AND roleId=#{roleId}
+    </delete>
+<!--    添加权限-->
+    <insert id="addRolePermission" parameterType="com.fontgoaway.entity.Gw_permission">
+        INSERT INTO gw_role_permission VALUES (#{perId},#{roleId});
+    </insert>
+</mapper>

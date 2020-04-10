@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.goaway.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="com.goaway.entity.Gw_user">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="avatarUrl" jdbcType="VARCHAR" property="avatarurl" />
+        <result column="openid" jdbcType="VARCHAR" property="openid" />
+        <result column="country" jdbcType="VARCHAR" property="country" />
+        <result column="province" jdbcType="VARCHAR" property="province" />
+        <result column="city" jdbcType="VARCHAR" property="city" />
+        <result column="gender" jdbcType="SMALLINT" property="gender" />
+        <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+    </resultMap>
+
+    <insert id="insertUser" parameterType="com.goaway.entity.Gw_user">
+        INSERT INTO gw_user(avatarUrl,openid,country,province,city,gender,nickname)VALUES(#{avatarUrl},#{openid},#{country}
+        ,#{province},#{city},#{gender},#{nickname})
+    </insert>
+
+    <select id="queryUserByOpenId" resultMap="BaseResultMap">
+        SELECT * FROM gw_user WHERE openid=#{openid}
+    </select>
+
+    <select id="queryNoReceived" resultMap="BaseResultMap">
+        select * from gw_user where id in(select userId from gw_notice_user where noticeId=#{noticeId} and flag=0)
+    </select>
+
+</mapper>

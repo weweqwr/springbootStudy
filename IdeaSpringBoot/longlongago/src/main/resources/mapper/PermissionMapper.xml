@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.longlongago.mapper.PermissionMapper">
+    <resultMap id="BaseResultMap" type="com.longlongago.entity.Permission">
+        <result column="perId" jdbcType="INTEGER" property="perId"/>
+        <result column="pername" jdbcType="VARCHAR" property="pername"/>
+        <result column="percode" jdbcType="VARCHAR" property="percode"/>
+    </resultMap>
+
+    <!-- 根据用户账号查询用户拥有的权限 -->
+    <select id="queryPermissionByAccount" resultMap="BaseResultMap">
+        SELECT p.perId,p.pername,p.percode
+        FROM permission p
+        INNER JOIN role_permission rp
+        on p.perId=rp.perId
+        INNER JOIN user_role ur
+        on ur.roleId=rp.roleId
+        where ur.account=#{account}
+    </select>
+
+</mapper>

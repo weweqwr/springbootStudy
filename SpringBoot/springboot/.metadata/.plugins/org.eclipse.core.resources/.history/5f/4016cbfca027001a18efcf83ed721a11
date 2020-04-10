@@ -1,0 +1,16 @@
+package com.longer.demo;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+@EnableTransactionManagement//开启事务管理
+@ComponentScan("com.test.springboot.ssm")//扫描注解元素
+@MapperScan("com.test.springboot.ssm.dao")//Mybatis的DAO所在包
+public class SpringbootSm01Application {
+
+	public static void main(String[] args) {
+		SpringApplication.run(SpringbootSm01Application.class, args);
+	}
+
+}

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.longer.demo.mapper.PermissionMapper">
+    <resultMap id="BaseResultMap" type="com.longer.demo.pojo.Permission">
+        <id column="perid" jdbcType="INTEGER" property="perid"/>
+        <result column="pername" jdbcType="VARCHAR" property="pername"/>
+        <result column="percode" jdbcType="VARCHAR" property="percode"/>
+    </resultMap>
+
+
+    <!-- 根据用户ID查询用户拥有的权限 -->
+    <select id="queryPermissionsByUserId" resultMap="BaseResultMap">
+   	select distinct t1.* from permission t1 inner join role_permission t2 inner join user_role t3
+   	on(t1.perid=t2.perid and t2.roleid=t3.roleid) 
+   	where t3.userid=#{userid}
+  </select>
+</mapper>

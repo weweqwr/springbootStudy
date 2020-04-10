@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.goaway.mapper.CommentMapper">
+    <resultMap id="BaseResultMap" type="com.goaway.entity.Gw_notice_comment">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="noticeId" jdbcType="INTEGER" property="noticeId" />
+        <result column="commentType" jdbcType="INTEGER" property="commentType" />
+        <result column="content" jdbcType="VARCHAR" property="content" />
+        <result column="userId" jdbcType="INTEGER" property="userId" />
+        <result column="commentTime" jdbcType="VARCHAR" property="commentTime" />
+        <result column="state" jdbcType="INTEGER" property="state" />
+        <result column="replyId" jdbcType="INTEGER" property="replyId" />
+        <result column="avatarUrl" jdbcType="VARCHAR" property="avatarUrl"></result>
+        <result column="nickname" jdbcType="VARCHAR" property="nickname"></result>
+
+        <result column="replyId" jdbcType="VARCHAR" property="replyId" />
+        <result column="commentContent" jdbcType="VARCHAR" property="commentContent" />
+        <result column="replyUserId" jdbcType="VARCHAR" property="replyUserId" />
+        <result column="replyNickname" jdbcType="VARCHAR" property="replyNickname" />
+        <result column="replyAvatarUrl" jdbcType="VARCHAR" property="replyAvatarUrl" />
+        <result column="toUserId" jdbcType="VARCHAR" property="toUserId"></result>
+        <result column="toNickname" jdbcType="VARCHAR" property="toNickname"></result>
+        <result column="toAvatarUrl" jdbcType="VARCHAR" property="toAvatarUrl" />
+        <result column="replyContent" jdbcType="VARCHAR" property="replyContent"></result>
+        <result column="replyTime" jdbcType="VARCHAR" property="replyTime"></result>
+        <result column="likeNumber" jdbcType="INTEGER" property="likeNumber"></result>
+    </resultMap>
+    <!--留言-->
+    <insert id="createComment" parameterType="com.goaway.entity.Gw_notice_comment">
+        insert into gw_notice_comment(noticeId,commentType,content,userId,commentTime,state,replyId)
+        values(#{noticeId},#{commentType},#{content},#{userId},#{commentTime},#{state},#{replyId});
+    </insert>
+    <!--根据noticeId查询留言所有信息-->
+    <select id="queryCommentByNoticeId" resultMap="BaseResultMap">
+    select  c.id,commentType,c.content commentContent,c.userId,c.nickname,c.avatarUrl,c.likeNumber,commentTime,GROUP_CONCAT(r.id) replyId,GROUP_CONCAT(r.userId) replyUserId,GROUP_CONCAT(r.nickname)replyNickname,GROUP_CONCAT(r.avatarUrl) replyAvatarUrl,GROUP_CONCAT(toUserId) toUserId,GROUP_CONCAT(toNickname) toNickname,GROUP_CONCAT(toAvatarUrl) toAvatarUrl,GROUP_CONCAT(r.content) replyContent,GROUP_CONCAT(replyTime) replyTime,c.likeNumber
+    from gw_notice_comment c
+    LEFT JOIN gw_notice_reply r
+    on c.id=r.commentId
+    and r.state=1
+    where noticeId=#{noticeId}
+    and c.state=1
+    GROUP BY c.id
+    </select>
+    <!--根据commentId删除留言-->
+    <update id="delteCommentById" parameterType="com.goaway.entity.Gw_notice_comment">
+        update gw_notice_comment set state=2 where id=#{id}
+    </update>
+</mapper>

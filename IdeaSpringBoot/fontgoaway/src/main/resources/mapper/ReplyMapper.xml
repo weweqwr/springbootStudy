@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fontgoaway.mapper.ReplyMapper">
+    <resultMap id="BaseResultMap" type="com.fontgoaway.entity.Gw_notice_reply">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="commentId" jdbcType="INTEGER" property="commentId" />
+        <result column="toUserId" jdbcType="INTEGER" property="toUserId" />
+        <result column="content" jdbcType="VARCHAR" property="content" />
+        <result column="replyTime" jdbcType="VARCHAR" property="replyTime" />
+        <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+        <result column="avatarUrl" jdbcType="VARCHAR" property="avatarUrl" />
+        <result column="toNickname" jdbcType="VARCHAR" property="toNickname" />
+        <result column="toAvatarUrl" jdbcType="VARCHAR" property="toAvatarUrl"></result>
+        <result column="state" jdbcType="INTEGER" property="state" />
+        <result column="pageNumber" jdbcType="INTEGER" property="pageNumber"/>
+        <result column="count" jdbcType="INTEGER" property="count"/>
+
+    </resultMap>
+    <select id="queryReply" resultMap="BaseResultMap">
+        SELECT * from gw_notice_reply
+        <!--通过id查询-->
+        <if test="id!=0">
+            WHERE id LIKE CONCAT('%',#{id},'%')
+        </if>
+        <if test="flag==1">
+            ORDER BY replyTime DESC
+        </if>
+        LIMIT #{page},15
+    </select>
+    <select id="ReplyCount" resultType="java.lang.Integer">
+        SELECT COUNT(*) count FROM gw_notice_reply
+        <if test="id!=0">
+            WHERE id LIKE CONCAT('%',#{id},'%')
+        </if>
+    </select>
+    <!--屏蔽群-->
+    <update id="sheildReply" parameterType="com.fontgoaway.entity.Gw_notice_reply">
+        UPDATE gw_notice_reply SET state=#{state}
+        WHERE id=#{id}
+    </update>
+</mapper>

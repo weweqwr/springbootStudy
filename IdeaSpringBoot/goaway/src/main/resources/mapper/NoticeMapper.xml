@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.goaway.mapper.NoticeMapper">
+    <resultMap id="BaseResultMap" type="com.goaway.entity.Gw_notice">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="noticeType" jdbcType="VARCHAR" property="noticeType"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="originator" jdbcType="DATE" property="originator"/>
+        <result column="groupId" jdbcType="VARCHAR" property="groupId"/>
+        <result column="userId" jdbcType="VARCHAR" property="userId"/>
+        <result column="flag" jdbcType="VARCHAR" property="flag"/>
+        <result column="createTime" jdbcType="VARCHAR" property="createTime"/>
+        <result column="groupName" jdbcType="VARCHAR" property="groupName" />
+        <result column="originatorName" jdbcType="VARCHAR" property="originatorName" />
+        <result column="documentURL" jdbcType="VARCHAR" property="documentURL" />
+        <result column="documentName" jdbcType="VARCHAR" property="documentName" />
+    </resultMap>
+
+
+    <!--通知的创建-->
+    <insert id="createNotice" parameterType="com.goaway.entity.Gw_notice" statementType="CALLABLE">
+    {call createNotice(
+       #{title,mode=IN,jdbcType=INTEGER},
+       #{noticeType,mode=IN,jdbcType=INTEGER},
+       #{content,mode=IN,jdbcType=VARCHAR},
+       #{originator,mode=IN,jdbcType=INTEGER},
+       #{groupId,mode=IN,jdbcType=VARCHAR},
+       #{imageURL,mode=IN,jdbcType=VARCHAR},
+       #{createTime,mode=IN,jdbcType=VARCHAR}
+    )}
+    </insert>
+
+    <!--插入附件信息-->
+    <insert id="insertDocument" parameterType="com.goaway.entity.Gw_notice">
+        INSERT INTO gw_document(documentName,documentURL) VALUES (#{documentName},#{documentURL});
+    </insert>
+    <!--根据userId或者通知名查询通知-->
+    <select id="queryNoticeByUserIdAndTitle" resultMap="BaseResultMap">
+        select
+        n.id,u.userId,noticetype,title,content,originator,nickname originatorName,groupId,groupName,createTime,flag
+        from gw_notice n,gw_notice_user u,gw_user gu,gw_group g
+        where
+        n.id=noticeId
+        and n.originator=gu.id
+        and n.groupId=g.id
+        and n.state=1
+        and u.userId=#{userId}
+        <if test="title!=null and title!=''">
+        and title=#{title}
+        </if>
+        GROUP BY n.id ORDER BY createTime
+    </select>
+    <!-- //根据noticeId软删除通知-->
+    <update id="updateNoticeStateByNoticeId" parameterType="com.goaway.entity.Gw_notice">
+        update gw_notice set state=2 where id=#{id}
+    </update>
+    <!--根据noticeId和UserId查询通知的详细信息-->
+    <select id="queryNoticeByUserIdAndNoticeId" resultMap="BaseResultMap">
+        SELECT n.id,title,noticeType,content,originator,createTime,state,GROUP_CONCAT(documentName) documentName,GROUP_CONCAT(documentURL) documentURL,GROUP_CONCAT(imageURL) imageURL,flag
+        FROM gw_notice n
+        left join gw_document d on n.id=d.noticeId
+        LEFT JOIN gw_image i on n.id=i.noticeId,gw_notice_user u
+        where u.noticeId=n.id
+        and userId=#{userId}
+        and n.id=#{id}
+        GROUP BY n.id
+    </select>
+    <update id="setReceived" parameterType="com.goaway.entity.Gw_notice">
+        update gw_notice_user set flag=1 where noticeId=#{noticeId} and userId=#{userId}
+    </update>
+</mapper>

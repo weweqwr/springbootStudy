@@ -1,0 +1,13 @@
+package com.longer.demo;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class SpringbootSm01Application {
+
+	public static void main(String[] args) {
+		SpringApplication.run(SpringbootSm01Application.class, args);
+	}
+
+}

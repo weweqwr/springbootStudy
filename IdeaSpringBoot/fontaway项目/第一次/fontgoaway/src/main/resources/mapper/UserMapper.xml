@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里填写对应的Dao文件所在的路径-->
+<mapper namespace="com.fontgoaway.mapper.UserMapper">
+    <!--    填写数据库里实例Gw_notice对应的表的表名-->
+    <!--    这里是作为一个变量使用-->
+    <sql id="table">gw_user</sql>
+    <!--    id属性填写Dao（Mapper）文件里的函数名称-->
+    <!--    查询所有-->
+    <select id="findAllUser" resultType="com.fontgoaway.entity.Gw_user" >
+        select * from
+        <include refid="table"></include>
+    </select>
+<!--    id-->
+    <select id="findUserById" resultType="com.fontgoaway.entity.Gw_user" parameterType="int">
+        select * from
+        <include refid="table"></include>
+        where id = #{id}
+    </select>
+<!--    nickname-->
+    <select id="findUserByNickname" resultType="com.fontgoaway.entity.Gw_user" parameterType="String">
+        select * from
+        <include refid="table"></include>
+        where nickname = #{nickname}
+    </select>
+<!--    模糊nickname-->
+    <select id="findUserByNicknameLick" resultType="com.fontgoaway.entity.Gw_user" parameterType="String">
+        select * from
+        <include refid="table"></include>
+        where nickname like #{nickname}
+    </select>
+<!--    屏蔽-->
+    <update id="modifyUserState" parameterType="com.fontgoaway.entity.Gw_user">
+        update <include refid="table"></include>
+        set state =#{state}
+        where id =#{id}
+    </update>
+</mapper>

@@ -1,0 +1,60 @@
+package com.longer.demo.shiro.config;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import com.longer.demo.shiro.relam.UserRealm;
+
+@Configuration
+public class ShiroConfig {
+
+	@Bean
+	@ConditionalOnMissingBean
+	public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
+		DefaultAdvisorAutoProxyCreator defaultAAP = new DefaultAdvisorAutoProxyCreator();
+		defaultAAP.setProxyTargetClass(true);
+		return defaultAAP;
+	}
+
+	// 将兹定于relam的验证方法注入的哦容器中
+	@Bean
+	public UserRealm myUerRealm() {
+		UserRealm userRealm = new UserRealm();
+		return userRealm;
+	}
+
+	// 权限管理，配置主要是Realm的管理认证
+	@Bean
+	public SecurityManager securityManager() {
+		DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
+		securityManager.setRealm(myUerRealm());
+		return securityManager;
+	}
+
+	// Filter工厂，设置对应的过滤条件和跳转条件
+	@Bean
+	public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager) {
+		ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
+		shiroFilterFactoryBean.setSecurityManager(securityManager);
+		Map<String, String> map = new HashMap<>();
+
+		map.put("/index.jsp", "anon");
+		map.put("/login/toLogin*", "anon");
+		map.put("/**", "authc");
+
+		// 注入如果没认证 跳转的页面
+		shiroFilterFactoryBean.setUnauthorizedUrl("error");
+		// 未授权的跳转页
+		shiroFilterFactoryBean.setFilterChainDefinitionMap(map);
+		return shiroFilterFactoryBean;
+	}
+
+}

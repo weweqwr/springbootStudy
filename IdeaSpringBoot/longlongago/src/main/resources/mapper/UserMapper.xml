@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.longlongago.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="com.longlongago.entity.User">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="account" jdbcType="VARCHAR" property="account"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="birthday" jdbcType="DATE" property="birthday"/>
+        <result column="address" jdbcType="VARCHAR" property="address"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="website" jdbcType="VARCHAR" property="website"/>
+        <result column="introduct" jdbcType="VARCHAR" property="introduct"/>
+        <result column="head" jdbcType="VARCHAR" property="head"/>
+        <result column="personsignature" jdbcType="VARCHAR" property="personsignature"/>
+        <result column="url" jdbcType="VARCHAR" property="url"/>
+        <result column="nickName" jdbcType="VARCHAR" property="nickName"/>
+    </resultMap>
+
+    <!-- 根据用户account查询用户拥有的权限 -->
+    <select id="selectUserInfo" resultMap="BaseResultMap">
+     select u.account,u.nickName,u.address,u.birthday,u.email,u.head,u.introduct,u.`name`,u.`password`,u.personsignature,u.phone,u.website,i.url
+    from user u,indeximage i
+    where u.account=#{account}
+    </select>
+    <!--根据account获取用户信息(shiro)-->
+    <select id="user" resultMap="BaseResultMap">
+     select u.account,u.address,u.birthday,u.email,u.head,u.introduct,u.`name`,u.`password`,u.personsignature,u.phone,u.website,i.url
+    from user u,indeximage i
+    where u.account=#{account}
+    </select>
+
+    <!--注册-->
+    <insert id="doRegister" parameterType="com.longlongago.entity.User">
+        INSERT INTO `user`(account,password) values(#{account},#{password})
+    </insert>
+</mapper>

@@ -1,0 +1,45 @@
+1、普通配置
+server.port=9090 将端口号改成9090
+2、自定義配置
+3、配置变量的引用 ${agan.hello}
+${random.int}随机生成一个变量
+
+4、随机端口
+在微服务里面不需要记住id和记住端口，所以不设置，springboot默认给的是8080端口，容易造成服务器8080端口被占用冲突问题
+server.port=${random.int[1024,9999]}
+5、yml配置文件  是springboot的一种配置文件
+   5.1 YAML是一种语言，配置文件的语言非常简单便捷,比properties好用
+   5.2 天然的树状结构
+6、多环境配置
+application-(profile).properties
+profile环境变量
+执行的命令
+java -jar xxx.jar --spring.profiles.active=YY
+7分析核心注解
+	7.1 、@Configuration来自spring3.0中 将这个bean入注到spring ioc中
+	@SpringBootConfiguration继承Configuration
+	@SpringBootConfiguration和@Configuration功能一样，用来代替xml的	bean
+	7.2、EnableAutoConfiguration
+	启动自动配置
+	Spring会根据加入jar包自动配置，
+	比如加入spring-boot-starter-web包就会判断你是否需要加入tomcat、logback这	些配置，自动配置好
+	总结：自动加载jar包的默认配置
+	7.3@ComponentScan
+	扫面当前的包和子包当前的注解，纳入到spring容器里管理
+	代替了<context:compent-scan>
+	7.4@ResponseBody将渲染一张jsp页面必须要用到的注解将Controler返回的对象
+	转化为一个json格式或者xml格式直接写入http
+	7.5@RequestMapping()url的路径
+	7.6@value从配置文件中读取变量
+	7.7springboot主要核心的两个注解@SpringBootApplication和@ResController
+	7.8@controlerAdvice出来处理全局异常
+8、SpringBoot的异常统一处理方法
+	//注意小坑，SpringBootApplicatio一定要放在和包同一层才能起作用
+	自定义全局异常也就是一个code和错误信息msg组成，生成构造方法和get,set方法
+	在全局异常处理ControlerAdvice处理异常信息
+	throw new BusinessException("100", "用户名密码错误！");在RestController处理		抛出异常
+9、如何监控springboot监控健康状况
+	health信息 status:"up"开启，total磁盘总 控件，free自由空间，threshold运行临界	
+空间
+10简洁可视化报表
+	坑:admin的版本要与springboot版本一致

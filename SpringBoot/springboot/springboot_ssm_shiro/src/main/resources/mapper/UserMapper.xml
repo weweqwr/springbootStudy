@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.longer.demo.mapper.UserMapper">
+  <resultMap id="BaseResultMap" type="com.longer.demo.pojo.User">
+    <id column="userid" jdbcType="INTEGER" property="userid" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="userpwd" jdbcType="VARCHAR" property="userpwd" />
+    <result column="sex" jdbcType="VARCHAR" property="sex" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+  </resultMap>
+  
+  <!-- 根据用户名查询用户 -->
+  <select id="queryUserByUserName" resultMap="BaseResultMap">
+  	select * from user where username=#{username}
+  </select>
+</mapper>

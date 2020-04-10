@@ -1,0 +1,33 @@
+package com.example.demo.exception;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+@ControllerAdvice
+public class MyControllerAdvice {
+	/**
+	 * 全局捕获异常类，只作用在@RequestMapping,所以异常信息都会被捕捉到
+	 */
+	@ResponseBody
+	@ExceptionHandler(value = Exception.class)
+	public Map<String, Object> errorHandler(Exception ex) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("code", -1);
+		map.put("msg", ex.getMessage());
+		return map;
+	}
+
+	@ResponseBody
+	@ExceptionHandler(value = BusinessException.class)
+	public Map<String, Object> errorHandler(BusinessException ex) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("code", ex.getCode());
+		map.put("msg", ex.getMsg());
+		return map;
+	}
+
+}

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fontgoaway.mapper.RoleMapper">
+    <resultMap id="BaseResultMap" type="com.fontgoaway.entity.Gw_role">
+        <result column="roleId" jdbcType="INTEGER" property="roleId"/>
+        <result column="rolename" jdbcType="VARCHAR" property="rolename"/>
+        <result column="account" jdbcType="VARCHAR" property="account"/>
+        <result column="curPage" jdbcType="INTEGER" property="curPage"/>
+        <result column="page" jdbcType="INTEGER" property="page"/>
+        <result column="count" jdbcType="INTEGER" property="count"/>
+        <result column="state" jdbcType="INTEGER" property="state"/>
+        <result column="perId" jdbcType="VARCHAR" property="perId"/>
+        <result column="pername" jdbcType="VARCHAR" property="pername"/>
+    </resultMap>
+    <!--根据userid查询该用户角色-->
+    <select id="queryRoleByAccount" resultMap="BaseResultMap">
+         SELECT ar.account,r.rolename
+        FROM gw_admin_role ar
+        INNER JOIN gw_role r
+        ON r.roleId=ar.roleId
+        WHERE ar.account=#{account}
+        AND r.state=1
+    </select>
+
+    <select id="queryAllRole" resultMap="BaseResultMap">
+        <if test="roleId ==0">
+            SELECT r.roleId,r.rolename,r.state,GROUP_CONCAT(p.perId) perId,GROUP_CONCAT(p.pername) pername
+            FROM gw_role r,gw_role_permission rp,gw_permission p
+            WHERE r.roleId=rp.roleId
+            and rp.perId=p. perId
+            GROUP BY r.roleId
+            LIMIT #{page},1
+        </if>
+        <if test="roleId !=0">
+            SELECT  r.roleId,r.rolename,r.state,GROUP_CONCAT(p.perId) perId,GROUP_CONCAT(p.pername) pername
+            FROM gw_permission p,gw_role r
+            WHERE  r.roleId=#{roleId}
+            and p.perId NOT IN(
+            SELECT perId  FROM gw_role r,gw_role_permission rp
+            WHERE r.roleId=rp.roleId
+            AND r.roleId=#{roleId})
+            GROUP BY r.roleId
+            LIMIT #{page},1
+        </if>
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        SELECT COUNT(*) count FROM gw_role
+        <if test="roleId !=0">
+            where roleId=#{roleId}
+        </if>
+    </select>
+<!--    处理角色状态-->
+    <update id="handleRoleState" parameterType="com.fontgoaway.entity.Gw_role">
+        UPDATE gw_role SET state=#{state} WHERE roleId=#{roleId}
+    </update>
+    <!--查找该角色没有的权限-->
+    <select id="queryRoleNoPermission">
+        SELECT * FROM gw_permission WHERE perId NOT IN(
+        SELECT perId  FROM gw_role r,gw_role_permission rp
+        WHERE r.roleId=rp.roleId
+        AND r.roleId=#{roleId})
+    </select>
+    <!--添加角色-->
+    <insert id="addRole" parameterType="com.fontgoaway.entity.Gw_role">
+        INSERT INTO gw_role(rolename) values (#{rolename});
+        INSERT INTO gw_role_permission values (1,LAST_INSERT_ID());
+    </insert>
+</mapper>

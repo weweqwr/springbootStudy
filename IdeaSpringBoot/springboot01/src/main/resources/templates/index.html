@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script type="text/javascript" src="/js/jquery-3.1.1.min.js"></script>
+    <script>
+        window.onload = function () {
+            var s = $("#login").val();
+
+            alert(s)
+        }
+
+        function login() {
+            $.post("/login/login.do", {username: 'lisi', password: '123456'}, function (obj) {
+                alert(obj.code + "  " + obj.msg);
+            });
+        };
+
+        function querry() {
+            $.post("/user/queryUser", function (obj) {
+                alert(obj.code + "  " + obj.msg);
+            });
+        };
+
+    </script>
+    <title>用户登陆</title>
+</head>
+<body>
+<h1 align="center">用户登陆</h1>
+<input type="button" value="登陆" id="login" onclick="login()"/>
+<input type="button" value="查询" id="query" onclick="querry()"/>
+<h1>shiro前后端分离</h1>
+
+
+</body>
+</html>

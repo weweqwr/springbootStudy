@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuntu.mapper.PermissionMapper">
+    <resultMap id="BaseResultMap" type="com.yuntu.entity.Permission">
+        <id column="perid" jdbcType="INTEGER" property="perid"/>
+        <result column="pername" jdbcType="VARCHAR" property="pername"/>
+        <result column="percode" jdbcType="VARCHAR" property="percode"/>
+    </resultMap>
+
+
+    <!-- 根据用户ID查询用户拥有的权限 -->
+    <select id="query" resultMap="BaseResultMap">
+   	select * from permission where perid=#{perid}
+    </select>
+</mapper>

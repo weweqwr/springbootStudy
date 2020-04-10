@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fontgoaway.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="com.fontgoaway.entity.Gw_user">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="avatarUrl" jdbcType="VARCHAR" property="avatarurl" />
+        <result column="openid" jdbcType="VARCHAR" property="openid" />
+        <result column="country" jdbcType="VARCHAR" property="country" />
+        <result column="province" jdbcType="VARCHAR" property="province" />
+        <result column="city" jdbcType="VARCHAR" property="city" />
+        <result column="gender" jdbcType="SMALLINT" property="gender" />
+        <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+        <result column="state" jdbcType="INTEGER" property="state" />
+        <result column="page" jdbcType="INTEGER" property="page"/>
+        <result column="curPage" jdbcType="INTEGER" property="curPage"/>
+    </resultMap>
+    <select id="queryUser" resultMap="BaseResultMap">
+        SELECT * from gw_user
+        <!--通过id查询-->
+        <if test="id!=0">
+            WHERE id LIKE CONCAT('%',#{id},'%')
+        </if>
+        LIMIT #{page},15
+    </select>
+    <select id="UserCount" resultType="java.lang.Integer">
+        SELECT COUNT(*) count FROM gw_user
+        <if test="id!=0">
+            WHERE id LIKE CONCAT('%',#{id},'%')
+        </if>
+    </select>
+    <!--屏蔽群-->
+    <update id="sheildUser" parameterType="com.fontgoaway.entity.Gw_user">
+        UPDATE gw_user SET state=#{state}
+        WHERE id=#{id}
+    </update>
+
+</mapper>

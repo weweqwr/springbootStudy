@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.goaway.mapper.ReplyMapper">
+    <resultMap id="BaseResultMap" type="com.goaway.entity.Gw_notice_reply">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="commentId" jdbcType="INTEGER" property="commentId" />
+        <result column="toUserId" jdbcType="INTEGER" property="toUserId" />
+        <result column="content" jdbcType="VARCHAR" property="content" />
+        <result column="replyTime" jdbcType="VARCHAR" property="replyTime" />
+        <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+        <result column="avatarUrl" jdbcType="VARCHAR" property="avatarUrl" />
+        <result column="toNickname" jdbcType="VARCHAR" property="toNickname" />
+        <result column="toAvatarUrl" jdbcType="VARCHAR" property="toAvatarUrl"></result>
+        <result column="state" jdbcType="INTEGER" property="state" />
+    </resultMap>
+    <insert id="createReply" parameterType="com.goaway.entity.Gw_notice_reply">
+        insert into gw_notice_reply(commentId,userId,nickname,avatarUrl,toUserId,toNickname,toAvatarUrl,content,replyTime,state)
+        values(#{commentId},#{userId},#{nickname},#{avatarUrl},#{toUserId},#{toNickname},#{toAvatarUrl},#{content},#{replyTime},#{state});
+    </insert>
+    <!---->
+    <!--根据id删除回复-->
+    <delete id="deleteReplyById" parameterType="com.goaway.entity.Gw_notice_reply">
+        update gw_notice_reply set state=2 where id=#{id}
+    </delete>
+</mapper>

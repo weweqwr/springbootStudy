@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里填写对应的Dao文件所在的路径-->
+<mapper namespace="com.fontgoaway.mapper.NoticeReplyMapper">
+    <!--    填写数据库里实例Gw_notice对应的表的表名-->
+    <!--    这里是作为一个变量使用-->
+    <sql id="table">gw_notice_reply</sql>
+    <!--    id属性填写Dao（Mapper）文件里的函数名称-->
+    <!--    查询所有-->
+    <select id="findAllReply" resultType="com.fontgoaway.entity.Gw_notice_reply">
+        select * from
+        <include refid="table"></include>
+    </select>
+<!--   commentId,userId,toUserId -->
+    <select id="findReplyByCIdUIdTUId" resultType="com.fontgoaway.entity.Gw_notice_reply" parameterType="int">
+        select * from
+        <include refid="table"></include>
+        where commentId = #{commentId}
+        and userId = #{userId}
+        and toUserId = #{toUserId}
+    </select>
+<!--   state -->
+    <select id="findReplyByState" resultType="com.fontgoaway.entity.Gw_notice_reply" parameterType="int">
+        select * from
+        <include refid="table"></include>
+        where state = #{state}
+    </select>
+<!--    屏蔽-->
+    <update id="modifyState" parameterType="int">
+        update <include refid="table"></include>
+        set state = #{state}
+        where id=#{id}
+    </update>
+</mapper>
+

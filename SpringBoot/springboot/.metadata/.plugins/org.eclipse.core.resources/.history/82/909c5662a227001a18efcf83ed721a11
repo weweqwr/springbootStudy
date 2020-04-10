@@ -1,0 +1,10 @@
+package com.longer.demo.dao;
+
+import java.util.List;
+
+import com.longer.demo.pojo.User;
+
+
+public interface UserMapper {
+	List<User> info();
+}

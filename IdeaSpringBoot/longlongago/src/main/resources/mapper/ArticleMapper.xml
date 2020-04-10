@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.longlongago.mapper.ArticleMapper">
+    <resultMap id="BaseResultMap" type="com.longlongago.entity.Article">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="article" jdbcType="INTEGER" property="article"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="account" jdbcType="VARCHAR" property="account"/>
+        <result column="createTime" jdbcType="VARCHAR" property="createTime"/>
+        <result column="coverImg" jdbcType="VARCHAR" property="coverImg"/>
+        <result column="state" jdbcType="INTEGER" property="state"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="arIntroduct" jdbcType="VARCHAR" property="arIntroduct"/>
+        <result column="readNumber" jdbcType="INTEGER" property="readNumber"/>
+    </resultMap>
+
+    <!-- 添加文章 -->
+    <insert id="addArticle" parameterType="com.longlongago.entity.Article">
+
+         INSERT INTO article(article,title,account,createTime,state)
+         VALUES(#{article},#{title},#{account},#{createTime},#{state})
+
+    </insert>
+    <select id="queryArticleByAccountAndState" resultMap="BaseResultMap">
+        SELECT a.id,a.article,a.title,a.createTime,a.readNumber,a.coverImg,u.name,a.arIntroduct FROM article a
+        LEFT JOIN `user` u
+        ON u.account=a.account
+        where a.state=#{state}
+        <if test="account!=null and account!=''">
+            and a.account=#{account}
+        </if>
+        <if test="arIntroduct!=null and arIntroduct!=''">
+            and a.arIntroduct like concat("%",#{arIntroduct},"%")
+        </if>
+        <if test="title!=null and title!=''">
+            or a.title like concat("%",#{title},"%")
+        </if>
+
+    </select>
+
+    <select id="queryArticleById" resultMap="BaseResultMap">
+        SELECT a.id,a.article,a.title,a.createTime,a.readNumber,a.coverImg,u.name,a.arIntroduct FROM article a
+        LEFT JOIN `user` u
+        ON u.account=a.account
+        where  a.id=#{id}
+    </select>
+
+</mapper>

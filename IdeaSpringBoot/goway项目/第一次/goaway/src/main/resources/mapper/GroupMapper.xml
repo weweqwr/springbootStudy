@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里填写对应的Dao文件所在的路径-->
+<mapper namespace="com.goaway.mapper.GroupMapper">
+    <!--    填写数据库里实例Gw_group对应的表的表名-->
+    <!--    这里是作为一个变量使用-->
+    <sql id="table">gw_group</sql>
+    <!--    id属性填写Dao（Mapper）文件里的函数名称-->
+    <!--    查询所有-->
+    <select id="queryGroupList" resultType="com.goaway.entity.Gw_group">
+        select
+        *
+        from
+        <include refid="table"/>
+    </select>
+
+    <!--    根据id查询-->
+    <select id="queryGroupById" resultType="com.goaway.entity.Gw_group" parameterType="String">
+        select
+        *
+        from
+        <include refid="table"/>
+        where
+        id=#{id}
+    </select>
+
+    <!--    增-->
+    <insert id="addGroup" parameterType="com.goaway.entity.Gw_group">
+        insert into
+        <include refid="table"/>
+        (id,groupName)
+        values
+        (#{id},#{groupName});
+    </insert>
+
+    <!--    改-->
+    <update id="update" parameterType="com.goaway.entity.Gw_group">
+        update
+        <include refid="table"/>
+        set
+        groupName = #{groupName}
+        where
+        id = #{id}
+    </update>
+
+    <!--    删-->
+    <delete id="deleteById" parameterType="String">
+        delete from
+        <include refid="table"/>
+        where id = #{id}
+    </delete>
+</mapper>

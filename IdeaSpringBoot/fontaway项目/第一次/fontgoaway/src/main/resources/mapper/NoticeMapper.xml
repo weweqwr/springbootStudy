@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里填写对应的Dao文件所在的路径-->
+<mapper namespace="com.fontgoaway.mapper.NoticeMapper">
+    <!--    填写数据库里实例Gw_notice对应的表的表名-->
+    <!--    这里是作为一个变量使用-->
+    <sql id="table">gw_notice</sql>
+    <!--    id属性填写Dao（Mapper）文件里的函数名称-->
+    <!--    查询所有-->   
+    <select id="findAllNotice" resultType="com.fontgoaway.entity.Gw_notice" parameterType="int">
+        select * from
+        <include refid="table"/>
+    </select>
+<!--    id-->
+    <select id="findNoticeById" resultType="com.fontgoaway.entity.Gw_notice" parameterType="int">
+        select * from
+        <include refid="table"/>
+        where id = #{id}
+    </select>
+<!--   title -->
+    <select id="findNoticeByTitle" resultType="com.fontgoaway.entity.Gw_notice" parameterType="String">
+        select * from
+        <include refid="table"/>
+        where title =#{title}
+    </select>
+<!--    模糊-->
+    <select id="findNoticeByTitleLick" resultType="com.fontgoaway.entity.Gw_notice" parameterType="String">
+        select * from
+        <include refid="table"/>
+        where title like #{title}
+    </select>
+<!--    noticeType-->
+    <select id="finsNoticeByType" resultType="com.fontgoaway.entity.Gw_notice" parameterType="int">
+        select * from
+        <include refid="table"/>
+        where noticeType = #{noticeType}
+    </select>
+<!--   originator发起人 -->
+    <select id="findNoticeByOriginator" resultType="com.fontgoaway.entity.Gw_notice" parameterType="int">
+        select * from
+        <include refid="table"/>
+        where originator =#{originator}
+    </select>
+<!--   groupId -->
+    <select id="findNoticeByGroupId" resultType="com.fontgoaway.entity.Gw_notice" parameterType="String">
+        select * from
+        <include refid="table"/>
+        where groupId = #{groupId}
+    </select>
+<!--    state-->
+    <select id="finDNoticeByState" resultType="com.fontgoaway.entity.Gw_notice" parameterType="int">
+        select * from
+        <include refid="table"/>
+        where state =#{state}
+    </select>
+<!--    屏蔽-->
+    <update id="modifyStateById" parameterType="com.fontgoaway.entity.Gw_notice">
+        update <include refid="table"></include>
+        set state = #{state}
+        where id = #{id}
+    </update>
+</mapper>

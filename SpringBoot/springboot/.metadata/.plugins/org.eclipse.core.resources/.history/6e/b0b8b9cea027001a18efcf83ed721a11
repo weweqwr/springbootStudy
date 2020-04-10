@@ -1,0 +1,26 @@
+package com.longer.demo.controller;
+
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.longer.demo.pojo.User;
+import com.longer.demo.servicedao.ServiceDao;
+
+@RestController
+public class BasicController {
+
+	@Autowired
+	private ServiceDao serviceDao;
+
+	@GetMapping(value = "")
+	public String index() {
+		List<User> user = serviceDao.info();
+		return user; // 此处表示返回值是一个值为“login”的String。不指向界面的原因是类的注解是@RestController
+	}
+
+
+}

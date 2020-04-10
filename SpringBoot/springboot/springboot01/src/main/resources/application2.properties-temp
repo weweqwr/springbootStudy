@@ -1,0 +1,6 @@
+
+server.port=8080
+agan.number=${random.int}
+agan.hello=hi,agan!
+agan.msg=hi,hello,world! ${agan.hello} ${agan.number}
+ management.endpoints.web.exposure.include="*"

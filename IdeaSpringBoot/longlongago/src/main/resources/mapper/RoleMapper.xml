@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.longlongago.mapper.RoleMapper">
+    <resultMap id="BaseResultMap" type="com.longlongago.entity.Role">
+        <result column="roleId" jdbcType="INTEGER" property="roleId"/>
+        <result column="rolename" jdbcType="VARCHAR" property="rolename"/>
+    </resultMap>
+    <!--根据userid查询该用户角色-->
+    <select id="queryRoleByAccount" resultMap="BaseResultMap">
+        SELECT ur.account,r.rolename
+        FROM user_role ur
+        INNER JOIN role r
+        ON r.roleId=ur.roleId
+        WHERE ur.account='13924768186'
+    </select>
+</mapper>

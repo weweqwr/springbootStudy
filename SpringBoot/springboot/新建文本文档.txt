@@ -1,0 +1,41 @@
+1、解决
+pop.xml文件首行报错
+https://blog.csdn.net/xiaxiaorui2003/article/details/93159835
+
+2、解决打包Maven项目时出现Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.1:testCompile
+https://blog.csdn.net/df981011512/article/details/81257240
+ <!-- 设置编译版本为1.8  新建项目打包失败要加上这段话-->
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-compiler-plugin</artifactId>
+			<configuration>
+				<source>1.8</source>
+					<target>1.8</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+         <plugin>
+
+3、actuator信息打印不全
+https://blog.csdn.net/white_ice/article/details/80511588
+项目中使用spring boot 1.5.7 + spring cloud Dalston.SR3版本 搭建，在访问actuator中的health端点时，刚开始只返回{“status”："down"}，没有详细的信息，最后查阅资料：a链接?得知spring boot 2.0 以下需要在配置文件中新增如下内容：management.security.enabled=false, spring boot 2.0 以上请参考?b链接?,需要在配置文件中新增: management.endpoint.health.show-details=always 。
+
+4、2.0以上actuator的配置
+说明：以下所有配置均在springboot 配置文件中编写，以properties格式书写
+下面开放所有原生接口
+
+management.endpoints.web.exposure.include=*
+
+下面的配置开放beans,info,health接口
+
+management.endpoints.web.exposure.include=beans,info,health
+
+下面配置为关闭beans接口
+
+management.endpoints.web.exposure.exclude=beans
+链接https://blog.csdn.net/qq_42677720/article/details/81078200
+
+5、关于admin的入门知识
+	https://www.cnblogs.com/anxminise/p/9795787.html
+
+

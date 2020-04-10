@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fontgoaway.mapper.NoticeMapper">
+    <resultMap id="BaseResultMap" type="com.fontgoaway.entity.Gw_notice">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="noticeType" jdbcType="INTEGER" property="noticeType"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="originator" jdbcType="DATE" property="originator"/>
+        <result column="groupId" jdbcType="VARCHAR" property="groupId"/>
+        <result column="userId" jdbcType="VARCHAR" property="userId"/>
+        <result column="flag" jdbcType="VARCHAR" property="flag"/>
+        <result column="createTime" jdbcType="VARCHAR" property="createTime"/>
+        <result column="groupName" jdbcType="VARCHAR" property="groupName" />
+        <result column="originatorName" jdbcType="VARCHAR" property="originatorName" />
+        <result column="documentURL" jdbcType="VARCHAR" property="documentURL" />
+        <result column="documentName" jdbcType="VARCHAR" property="documentName" />
+        <result column="page" jdbcType="INTEGER" property="page"/>
+        <result column="curPage" jdbcType="INTEGER" property="curPage"/>
+    </resultMap>
+
+    <select id="queryNotice" resultMap="BaseResultMap">
+        SELECT * from gw_notice
+        <!--通过id查询-->
+        <if test="id!=0">
+            WHERE id LIKE CONCAT('%',#{id},'%')
+        </if>
+        <if test="flag==1">
+            ORDER BY createTime DESC
+        </if>
+        LIMIT #{page},15
+    </select>
+    <select id="NoticeCount" resultType="java.lang.Integer">
+        SELECT COUNT(*) count FROM gw_notice
+        <if test="id!=0">
+            WHERE id LIKE CONCAT('%',#{id},'%')
+        </if>
+    </select>
+    <!--屏蔽群-->
+    <update id="sheildNotice" parameterType="com.fontgoaway.entity.Gw_notice">
+        UPDATE gw_notice SET state=#{state}
+        WHERE id=#{id}
+    </update>
+
+</mapper>

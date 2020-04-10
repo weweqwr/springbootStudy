@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里填写对应的Dao文件所在的路径-->
+<mapper namespace="com.fontgoaway.mapper.GroupMapper">
+    <!--    填写数据库里实例Gw_notice对应的表的表名-->
+    <!--    这里是作为一个变量使用-->
+    <sql id="table">gw_group</sql>
+    <!--    id属性填写Dao（Mapper）文件里的函数名称-->
+    <!--    查询所有-->
+    <select id="findAllGroup" resultType="com.fontgoaway.entity.Gw_group">
+        select * from
+        <include refid="table"></include>
+    </select>
+<!--    groupId-->
+    <select id="findGroupById" resultType="com.fontgoaway.entity.Gw_group" parameterType="String">
+        select * from
+        <include refid="table"></include>
+        where id =#{id}
+    </select>
+<!--    模糊groupName-->
+    <select id="findGroupByNameLike" resultType="com.fontgoaway.entity.Gw_group" parameterType="String">
+        select * from
+        <include refid="table"></include>
+        where groupName like #{groupName}
+    </select>
+<!--    state-->
+    <select id="findGroupByState" resultType="com.fontgoaway.entity.Gw_group" parameterType="int">
+        select * from
+        <include refid="table"></include>
+        where state = #{state}
+    </select>
+<!--    屏蔽-->
+    <update id="modifyGroupState" parameterType="com.fontgoaway.entity.Gw_group">
+        update <include refid="table"></include>
+        set state = #{state}
+        where id = #{id}
+    </update>
+</mapper>
+
+

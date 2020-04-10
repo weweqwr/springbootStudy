@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fontgoaway.mapper.AdminMapper">
+    <resultMap id="BaseResultMap" type="com.fontgoaway.entity.Gw_admin">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="account" jdbcType="VARCHAR" property="account"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="avatarUrl" jdbcType="VARCHAR" property="avatarUrl"/>
+        <result column="verify" jdbcType="INTEGER" property="verify"/>
+        <result column="state" jdbcType="INTEGER" property="state"/>
+        <result column="page" jdbcType="INTEGER" property="page"/>
+        <result column="roleId" jdbcType="VARCHAR" property="roleId"/>
+        <result column="rolename" jdbcType="VARCHAR" property="rolename"/>
+        <result column="province" jdbcType="VARCHAR" property="province"/>
+        <result column="city" jdbcType="VARCHAR" property="city"/>
+        <result column="area" jdbcType="VARCHAR" property="area"/>
+        <result column="gender" jdbcType="INTEGER" property="gender"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="detailAdd" jdbcType="VARCHAR" property="detailAdd"/>
+    </resultMap>
+    <!--根据account获取用户信息(shiro)-->
+    <select id="admin" resultMap="BaseResultMap">
+        SELECT * FROM gw_admin
+        WHERE account=#{account}
+    </select>
+    <!--注册-->
+    <insert id="doRegister" parameterType="com.fontgoaway.entity.Gw_admin">
+        INSERT INTO gw_admin(account,password) VALUES(#{account},#{password});
+        INSERT INTO gw_admin_role(account,roleId) VALUES(#{account},1);
+    </insert>
+    <!--    //查询所有管理员账号-->
+    <select id="queryAllAdmin" resultMap="BaseResultMap">
+        SELECT * FROM gw_admin
+        WHERE verify=#{verify}
+        <if test="account!=null and account!=''">
+            AND account LIKE CONCAT('%',#{account},'%')
+        </if>
+        LIMIT #{page},15
+    </select>
+    <!--    //查询所愿管理员总数-->
+    <select id="count" resultType="java.lang.Integer">
+        SELECT COUNT(*) count FROM gw_admin
+        where verify=#{verify}
+        <if test="account!=null and account!=''">
+            AND account LIKE CONCAT('%',#{account},'%')
+        </if>
+        <if test="state!=-1">
+            AND state=1
+        </if>
+    </select>
+    <update id="handleVertity" parameterType="com.fontgoaway.entity.Gw_admin">
+        UPDATE gw_admin
+        SET verify=1,state=#{state}
+        WHERE id=#{id}
+    </update>
+
+    <select id="queryAdminRole" resultMap="BaseResultMap">
+        <choose>
+            <when test="account==null or account==''">
+                SELECT d.id,d.account,d.avatarUrl,GROUP_CONCAT(r.rolename) rolename,GROUP_CONCAT(r.roleId) roleId
+                FROM gw_role r,gw_admin_role ar,gw_admin d
+                where d.account=ar.account
+                and r.roleId=ar.roleId
+                and d.verify=1
+                and d.state=1
+                GROUP BY d.account
+                LIMIT #{page},2
+            </when>
+            <otherwise>
+                SELECT a.id,a.account,a.avatarUrl,GROUP_CONCAT(r.rolename) rolename,GROUP_CONCAT(r.roleId) roleId
+                FROM gw_role r,gw_admin a
+                WHERE a.account=#{account}
+                AND r.roleId NOT IN(
+                SELECT r.roleId FROM gw_role r,gw_admin_role ar
+                WHERE ar.roleId=r.roleId
+                AND ar.account=#{account})
+                GROUP BY a.account
+                LIMIT #{page},2
+            </otherwise>
+        </choose>
+    </select>
+    <insert id="addAdminRole" parameterType="com.fontgoaway.entity.Gw_admin">
+        INSERT INTO gw_admin_role(account,roleId) VALUES (#{account},#{roleId})
+    </insert>
+    <!--    删除账号角色-->
+    <delete id="deleteAdminRole" parameterType="com.fontgoaway.entity.Gw_admin">
+        DELETE FROM gw_admin_role WHERE account=#{account} AND roleId=#{roleId}
+    </delete>
+    <!--查询账号基本信息-->
+    <select id="queryAdminInfo" resultType="com.fontgoaway.entity.Gw_admin">
+       SELECT * FROM
+		(SELECT COUNT(u.id) countUser FROM gw_user u) a,
+        (SELECT COUNT(n.id) countNotice FROM gw_notice n) b,
+        (SELECT COUNT(g.id) countGroup FROM gw_group g) c,
+        (SELECT COUNT(u.id) countUserBan FROM gw_user u where u.state=0) d,
+        (SELECT COUNT(n.id) countNoticeBan FROM gw_notice n where n.state=0) e,
+        (SELECT COUNT(g.id) countGroupBan FROM gw_group g where g.state=0) f,
+        (SELECT COUNT(a.id) adminBand FROM gw_admin a where a.state=0) g,
+        (SELECT * FROM gw_admin a where a.account=#{account}) h;
+    </select>
+    <!--修改账号信息-->
+    <update id="updateAdminInfo" parameterType="com.fontgoaway.entity.Gw_admin">
+            update gw_admin
+            set
+            <if test="avatarUrl !=null and avatarUrl!=''">
+            avatarUrl=#{avatarUrl},
+            </if>
+            username=#{username},
+            gender=#{gender},
+            province=#{province},
+            city=#{city},
+            area=#{area},
+            detailAdd=#{detailAdd},
+            phone=#{phone}
+            where account=#{account}
+
+    </update>
+</mapper>

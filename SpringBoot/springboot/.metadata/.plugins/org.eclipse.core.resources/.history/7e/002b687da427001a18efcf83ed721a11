@@ -1,0 +1,8 @@
+#\u6570\u636E\u6E90\u7684\u57FA\u672C\u4FE1\u606F
+ spring.datasource.url = jdbc:mysql://localhost:3306/test?characterEncoding=utf-8
+ spring.datasource.username = root
+ spring.datasource.password =123456
+ spring.datasource.driverClassName = com.mysql.jdbc.Driver 
+ mybatis.mapper-locations=classpath*:com/test/springboot/ssm/dao/mappers/*.xml
+ 
+spring.main.web-application-type=none
